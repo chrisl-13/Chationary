@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import API from './vocabAPI';
+import API from './VocabAPI';
 import InputForm from './InputForm';
 import Messages from './Messages';
 

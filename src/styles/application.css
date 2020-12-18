@@ -1,4 +1,5 @@
 @import '_app';
+@import '_VocabAPI';
 
 body {
   color: purple;
