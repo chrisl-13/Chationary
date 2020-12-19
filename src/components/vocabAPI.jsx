@@ -3,20 +3,21 @@ import React, { useState, Component } from 'react';
 function VocabAPI() {
   // React Hooks State (Updating state is async)
   const [vocab, setVocab] = useState('');
+  const [search, setSearch] = useState('');
   const [vocabHist, setVocabHist] = useState([' ', 'apple', ' ', 'banana']);
   const [definition, setDefinition] = useState(null);
-  const [selectLang, setSelectLang] = useState(null);
-  const [transLang, setTransLang] = useState(null);
+  const [selectLang, setSelectLang] = useState('en');
+  const [transLang, setTransLang] = useState('en');
 
   // React Hooks Functions
   const handleVocab = (e) => {
-    setVocab(e.target.value);
+    setVocab(e.target.value)
+    setSearch(e.target.value.replace(/ /gi, '%20'));
   }
 
   const handleSubmitVocab = async (e) => {
     e.preventDefault(); //Prevents hot reload upon submit
-    `https://translate.google.com/?sl=en&tl=es&text=${definition}&op=translate`
-
+    window.open(`https://translate.google.com/?sl=${selectLang}&tl=${transLang}&text=${search}&op=translate`);
     //Word History
     const currSearch = e.target[0].value;
     if (vocabHist.length <= 18) {
@@ -42,7 +43,7 @@ function VocabAPI() {
       This is our API Component!
       <form onSubmit={handleSubmitVocab}>
         <label className='apiTextBox'>
-        <label htmlFor='sl' className='slContainer'>Translate to:</label>
+        <label htmlFor='sl' className='slContainer'>Translate from:</label>
             <select name='sl' id='sl' className='sl' value={selectLang} onChange={handleSelectLang}>
               <option value="en">English</option>
               <option value="es">Spanish</option>
@@ -58,7 +59,7 @@ function VocabAPI() {
             </select>
           <input type="text" name="vocab" placeholder="Translate vocabulary" value={vocab} onChange={handleVocab}></input> 
         </label>
-        <input type="submit" value="Submit"/> 
+        <input type="submit" value="Translate"/> 
         <div>Definition of a banana or mango...? { definition }</div>
         <div className='vocabHistContainer'>
           <p>Search History:</p>
