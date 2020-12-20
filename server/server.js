@@ -89,8 +89,8 @@ https.get(options, (resp) => {
     body += d;
   });
   resp.on('end', () => {
-    const definition = JSONparse(body);
-    console.log(definition);
+    const definition = JSON.parse(body);
+    console.log(definition.results[0].lexicalEntries[0].entries[0].senses[0].definitions[0]);
   });
 });
 
