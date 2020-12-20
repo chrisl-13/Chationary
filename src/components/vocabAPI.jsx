@@ -1,4 +1,6 @@
 import React, { useState, Component } from 'react';
+import Axios from 'Axios';
+import { ProgressPlugin } from 'webpack';
 
 function VocabAPI() {
   // React Hooks State (Updating state is async)
@@ -6,9 +8,14 @@ function VocabAPI() {
   const [search, setSearch] = useState('');
   const [vocabHist, setVocabHist] = useState([' ', 'apple', ' ', 'banana']);
   const [definition, setDefinition] = useState(null);
-  const [selectLang, setSelectLang] = useState('en');
-  const [transLang, setTransLang] = useState('en');
+  const [sourceLang, setSourceLang] = useState('en');
+  const [targetLang, setTargetLang] = useState('en');
 
+  //API
+  const app_id = 'd31df20'
+  const app_key = '0ef1989e11f3eccf8ebb9f20590cdb28'
+  const language = "en-us"
+  
   // React Hooks Functions
   const handleVocab = (e) => {
     setVocab(e.target.value)
@@ -17,9 +24,22 @@ function VocabAPI() {
 
   const handleSubmitVocab = async (e) => {
     e.preventDefault(); //Prevents hot reload upon submit
-    window.open(`https://translate.google.com/?sl=${selectLang}&tl=${transLang}&text=${search}&op=translate`);
+    // window.open(`https://translate.google.com/?sl=${selectLang}&tl=${transLang}&text=${search}&op=translate`); //Workaround for GoogleTranslate API requiring $$$
+    
+    const currSearch = e.target[2].value;
+    const body = { vocab: currSearch, sl: sourceLang, tl: targetLang };
+    await fetch('/dictionary', {
+      method: 'POST',
+      header: {
+        'Content-Type': 'Application/JSON'
+      },
+      body: JSON.stringify(body)
+    })
+    .then(res => res.json())
+    .then(data => props.history.push('/dictionary'))
+    .catch(err => console.log(`Post error on /dictionary: ${err}`))
+    
     //Word History
-    const currSearch = e.target[0].value;
     if (vocabHist.length <= 18) {
       setVocabHist([' ', currSearch, ...vocabHist]);
     } else {
@@ -29,12 +49,12 @@ function VocabAPI() {
     console.log('Form Submitted');
   }
 
-  const handleSelectLang = (e) => {
-    setSelectLang(e.target.value);
+  const handleSourceLang = (e) => {
+    setSourceLang(e.target.value);
   }
 
-  const handleTransLang = (e) => {
-    setTransLang(e.target.value);
+  const handleTargetLang = (e) => {
+    setTargetLang(e.target.value);
   }
   
   //Render
@@ -43,23 +63,25 @@ function VocabAPI() {
       This is our API Component!
       <form onSubmit={handleSubmitVocab}>
         <label className='apiTextBox'>
-        <label htmlFor='sl' className='slContainer'>Translate from:</label>
-            <select name='sl' id='sl' className='sl' value={selectLang} onChange={handleSelectLang}>
+          <label htmlFor='sl' className='slContainer'>Translate from: </label>
+            <select name='sl' id='sl' className='sl' value={sourceLang} onChange={handleSourceLang}>
               <option value="en">English</option>
               <option value="es">Spanish</option>
               <option value="fr">French</option>
               <option value="de">German</option>
             </select>
-          <label htmlFor='tl' className='tlContainer'>Translate to:</label>
-            <select name='tl' id='tl' className='tl' value={transLang} onChange={handleTransLang}>
+          <label htmlFor='tl' className='tlContainer'>Translate to: </label>
+            <select name='tl' id='tl' className='tl' value={targetLang} onChange={handleTargetLang}>
               <option value="en">English</option>
               <option value="es">Spanish</option>
               <option value="fr">French</option>
               <option value="de">German</option>
             </select>
-          <input type="text" name="vocab" placeholder="Translate vocabulary" value={vocab} onChange={handleVocab}></input> 
+          <div>
+            <input type="text" name="vocab" placeholder="Translate vocabulary" value={vocab} onChange={handleVocab}></input> 
+            <input type="submit" value="Translate"/> 
+          </div>
         </label>
-        <input type="submit" value="Translate"/> 
         <div>Definition of a banana or mango...? { definition }</div>
         <div className='vocabHistContainer'>
           <p>Search History:</p>

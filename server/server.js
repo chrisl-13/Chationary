@@ -4,6 +4,7 @@ const cookieParser = require('cookie-parser');
 
 const app = express();
 const PORT = 3000;
+const https = require('https');
 
 /**
  * require routers
@@ -62,6 +63,35 @@ app.use((err, req, res, next) => {
  */
 app.listen(PORT, () => {
   console.log(`Server listening on port: ${PORT}`);
+});
+
+const appId = '5d31df20';
+const appKey = '0ef1989e11f3eccf8ebb9f20590cdb28';
+const language = 'en-us';
+const wordId = 'banana';
+const fields = 'definitions';
+const strictMatch = 'false';
+
+const options = {
+  host: 'od-api.oxforddictionaries.com',
+  port: '443',
+  path: `/api/v2/entries/${language}/${wordId.toLowerCase()}?fields=${fields}&strictMatch=${strictMatch}`,
+  method: 'GET',
+  headers: {
+    app_id: appId,
+    app_key: appKey,
+  },
+};
+
+https.get(options, (resp) => {
+  let body = '';
+  resp.on('data', (d) => {
+    body += d;
+  });
+  resp.on('end', () => {
+    const definition = JSONparse(body);
+    console.log(definition);
+  });
 });
 
 module.exports = app;
