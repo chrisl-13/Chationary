@@ -27,7 +27,7 @@ app.use(cookieParser());
  * handle requests for static files
  */
 
-// API
+// Merriam Webster API
 const appId = '5d31df20';
 const appKey = '0ef1989e11f3eccf8ebb9f20590cdb28';
 const language = 'en-us';
@@ -58,8 +58,8 @@ https.get(options, (resp) => {
 });
 
 app.post('/dictionary', (req, res) => {
-  console.log("req.body", req.body)
-  res.status(200).json(req.body)
+  console.log('req.body', req.body);
+  res.status(200).json(req.body);
 });
 
 app.use(express.static(path.join(__dirname, '../src')));

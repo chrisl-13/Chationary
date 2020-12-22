@@ -31,6 +31,13 @@ function VocabAPI() {
     } catch (err) {
       console.log(`Post error on /dictionary: ${err}`)
     }
+
+    if (vocabHist.length <= 18) {
+      setVocabHist([' ', currSearch, ...vocabHist]);
+    } else {
+      const vocabHistCopy = vocabHist.slice(0, vocabHist.length - 2);
+      setVocabHist([' ', currSearch, ...vocabHistCopy]);
+    }
     
     console.log('Form Submitted');
   }
