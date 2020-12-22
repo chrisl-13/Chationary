@@ -27,44 +27,7 @@ app.use(cookieParser());
  * handle requests for static files
  */
 
-app.use(express.static(path.join(__dirname, '../src')));
-
-/**
- * define route handlers
- */
-// ********** This is just for testing only! Please change **********
-app.use('/api', (req, res) => {
-  return res.status(200).send(req.body);
-});
-
-// catch-all route handler for any requests to an unknown route
-app.use('*', (req, res) => {
-  return res.sendStatus(404);
-});
-
-/**
- * configure express global error handler
- */
-
-app.use((err, req, res, next) => {
-  const defaultErr = {
-    log: 'Express error handler caught unknown middleware error',
-    status: 400,
-    message: { err: 'An error occurred' },
-  };
-
-  const errorObj = Object.assign(defaultErr, err);
-  console.log(errorObj.message);
-  return res.status(errorObj.status).json(errorObj.status);
-});
-
-/**
- * start server
- */
-app.listen(PORT, () => {
-  console.log(`Server listening on port: ${PORT}`);
-});
-
+// API
 const appId = '5d31df20';
 const appKey = '0ef1989e11f3eccf8ebb9f20590cdb28';
 const language = 'en-us';
@@ -92,6 +55,49 @@ https.get(options, (resp) => {
     const definition = JSON.parse(body);
     console.log(definition.results[0].lexicalEntries[0].entries[0].senses[0].definitions[0]);
   });
+});
+
+app.post('/dictionary', (req, res) => {
+  console.log("req.body", req.body)
+  res.status(200).json(req.body)
+});
+
+app.use(express.static(path.join(__dirname, '../src')));
+
+/**
+ * define route handlers
+ */
+// ********** This is just for testing only! Please change **********
+// app.use('/', (req, res) => {
+//   return res.status(200).send(req.body);
+// });
+
+// catch-all route handler for any requests to an unknown route
+app.use('*', (req, res) => {
+  return res.sendStatus(404);
+});
+
+/**
+ * configure express global error handler
+ */
+
+app.use((err, req, res, next) => {
+  const defaultErr = {
+    log: 'Express error handler caught unknown middleware error',
+    status: 400,
+    message: { err: 'An error occurred' },
+  };
+
+  const errorObj = Object.assign(defaultErr, err);
+  console.log(errorObj.message);
+  return res.status(errorObj.status).json(errorObj.status);
+});
+
+/**
+ * start server
+ */
+app.listen(PORT, () => {
+  console.log(`Server listening on port: ${PORT}`);
 });
 
 module.exports = app;

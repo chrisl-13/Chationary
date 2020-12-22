@@ -1,6 +1,5 @@
 import React, { useState, Component } from 'react';
 import Axios from 'Axios';
-import { ProgressPlugin } from 'webpack';
 
 function VocabAPI() {
   // React Hooks State (Updating state is async)
@@ -28,16 +27,22 @@ function VocabAPI() {
     
     const currSearch = e.target[2].value;
     const body = { vocab: currSearch, sl: sourceLang, tl: targetLang };
-    await fetch('/dictionary', {
-      method: 'POST',
-      header: {
-        'Content-Type': 'Application/JSON'
-      },
-      body: JSON.stringify(body)
-    })
-    .then(res => res.json())
-    .then(data => props.history.push('/dictionary'))
-    .catch(err => console.log(`Post error on /dictionary: ${err}`))
+    try {
+      const response = await Axios.post('/dictionary', {
+        header: { 'Content-Type': 'Application/JSON' },
+        body: JSON.stringify(body)
+      })
+      console.log(response)
+    } catch (err) {
+      console.log(`Post error on /dictionary: ${err}`)
+    }
+    
+    // .then(res => {
+    //   console.log(res)
+    // })
+    // .catch(err => {
+    //   console.log(`Post error on /dictionary: ${err}`)
+    // })
     
     //Word History
     if (vocabHist.length <= 18) {
