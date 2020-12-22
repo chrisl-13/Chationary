@@ -1,5 +1,5 @@
 import React, { useState, Component } from 'react';
-import Axios from 'Axios';
+import Axios from 'axios';
 
 function VocabAPI() {
   // React Hooks State (Updating state is async)
@@ -10,11 +10,6 @@ function VocabAPI() {
   const [sourceLang, setSourceLang] = useState('en');
   const [targetLang, setTargetLang] = useState('en');
 
-  //API
-  const app_id = 'd31df20'
-  const app_key = '0ef1989e11f3eccf8ebb9f20590cdb28'
-  const language = "en-us"
-  
   // React Hooks Functions
   const handleVocab = (e) => {
     setVocab(e.target.value)
@@ -37,20 +32,6 @@ function VocabAPI() {
       console.log(`Post error on /dictionary: ${err}`)
     }
     
-    // .then(res => {
-    //   console.log(res)
-    // })
-    // .catch(err => {
-    //   console.log(`Post error on /dictionary: ${err}`)
-    // })
-    
-    //Word History
-    if (vocabHist.length <= 18) {
-      setVocabHist([' ', currSearch, ...vocabHist]);
-    } else {
-      const vocabHistCopy = vocabHist.slice(0, vocabHist.length - 2);
-      setVocabHist([' ', currSearch, ...vocabHistCopy]);
-    }
     console.log('Form Submitted');
   }
 
