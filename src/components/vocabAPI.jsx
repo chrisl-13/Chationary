@@ -27,7 +27,8 @@ function VocabAPI() {
         header: { 'Content-Type': 'Application/JSON' },
         body: body
       })
-      console.log(response)
+      console.log(response);
+      setDefinition(response.data);
     } catch (err) {
       console.log(`Post error on /dictionary: ${err}`)
     }
@@ -75,7 +76,7 @@ function VocabAPI() {
             <input type="submit" value="Translate"/> 
           </div>
         </label>
-        <div>Definition of a banana or mango...? { definition }</div>
+        <div>Definition: { definition }</div>
         <div className='vocabHistContainer'>
           <p>Search History:</p>
           <div className='vocabHist'> { vocabHist } </div>

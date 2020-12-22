@@ -5,6 +5,7 @@ const cookieParser = require('cookie-parser');
 const app = express();
 const PORT = 3000;
 const https = require('https');
+const e = require('express');
 
 /**
  * require routers
@@ -34,6 +35,7 @@ const language = 'en-us';
 let wordId = 'banana';
 const fields = 'definitions';
 const strictMatch = 'false';
+let definition = 'Sorry, we cannot find this word';
 
 app.post('/dictionary', (req, res) => {
   console.log('req.body', req.body);
@@ -57,10 +59,13 @@ app.post('/dictionary', (req, res) => {
       body += d;
     });
     resp.on('end', () => {
-      const data = JSON.parse(body);
-      const definition = data.results[0].lexicalEntries[0].entries[0].senses[0].definitions[0];
-      console.log(definition);
-      res.status(200).json(definition);
+      try{
+        const data = JSON.parse(body);
+        definition = data.results[0].lexicalEntries[0].entries[0].senses[0].definitions[0];
+        res.status(200).json(definition);
+      } catch {
+        res.status(200).json(definition);
+      }
     });
   });
 });
