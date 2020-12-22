@@ -6,6 +6,7 @@ function VocabAPI() {
   const [vocab, setVocab] = useState('');
   const [search, setSearch] = useState('');
   const [vocabHist, setVocabHist] = useState([' ', 'apple', ' ', 'banana']);
+  const [translation, setTranslation] = useState('');
   const [definition, setDefinition] = useState(null);
   const [sourceLang, setSourceLang] = useState('en');
   const [targetLang, setTargetLang] = useState('en');
@@ -20,6 +21,7 @@ function VocabAPI() {
     e.preventDefault(); //Prevents hot reload upon submit
     // window.open(`https://translate.google.com/?sl=${selectLang}&tl=${transLang}&text=${search}&op=translate`); //Workaround for GoogleTranslate API requiring $$$
     
+    //API Request Functionality
     const currSearch = e.target[2].value;
     const body = { vocab: currSearch, sl: sourceLang, tl: targetLang };
     try {
@@ -33,6 +35,7 @@ function VocabAPI() {
       console.log(`Post error on /dictionary: ${err}`)
     }
 
+    //Word Search History Functionality
     if (vocabHist.length <= 18) {
       setVocabHist([' ', currSearch, ...vocabHist]);
     } else {
@@ -73,7 +76,7 @@ function VocabAPI() {
             </select>
           <div>
             <input type="text" name="vocab" placeholder="Translate vocabulary" value={vocab} onChange={handleVocab}></input> 
-            <input type="submit" value="Translate"/> 
+            <input type="submit" value="Look up definition"/> 
           </div>
         </label>
         <div>Definition: { definition }</div>
