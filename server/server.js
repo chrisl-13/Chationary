@@ -31,35 +31,38 @@ app.use(cookieParser());
 const appId = '5d31df20';
 const appKey = '0ef1989e11f3eccf8ebb9f20590cdb28';
 const language = 'en-us';
-const wordId = 'banana';
+let wordId = 'banana';
 const fields = 'definitions';
 const strictMatch = 'false';
 
-const options = {
-  host: 'od-api.oxforddictionaries.com',
-  port: '443',
-  path: `/api/v2/entries/${language}/${wordId.toLowerCase()}?fields=${fields}&strictMatch=${strictMatch}`,
-  method: 'GET',
-  headers: {
-    app_id: appId,
-    app_key: appKey,
-  },
-};
-
-https.get(options, (resp) => {
-  let body = '';
-  resp.on('data', (d) => {
-    body += d;
-  });
-  resp.on('end', () => {
-    const definition = JSON.parse(body);
-    console.log(definition.results[0].lexicalEntries[0].entries[0].senses[0].definitions[0]);
-  });
-});
-
 app.post('/dictionary', (req, res) => {
   console.log('req.body', req.body);
-  res.status(200).json(req.body);
+  wordId = req.body.body.vocab;
+  console.log(wordId);
+
+  const options = {
+    host: 'od-api.oxforddictionaries.com',
+    port: '443',
+    path: `/api/v2/entries/${language}/${wordId.toLowerCase()}?fields=${fields}&strictMatch=${strictMatch}`,
+    method: 'GET',
+    headers: {
+      app_id: appId,
+      app_key: appKey,
+    },
+  };
+
+  https.get(options, (resp) => {
+    let body = '';
+    resp.on('data', (d) => {
+      body += d;
+    });
+    resp.on('end', () => {
+      const data = JSON.parse(body);
+      const definition = data.results[0].lexicalEntries[0].entries[0].senses[0].definitions[0];
+      console.log(definition);
+      res.status(200).json(definition);
+    });
+  });
 });
 
 app.use(express.static(path.join(__dirname, '../src')));

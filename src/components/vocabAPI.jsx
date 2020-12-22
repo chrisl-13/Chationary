@@ -25,7 +25,7 @@ function VocabAPI() {
     try {
       const response = await Axios.post('/dictionary', {
         header: { 'Content-Type': 'Application/JSON' },
-        body: JSON.stringify(body)
+        body: body
       })
       console.log(response)
     } catch (err) {
